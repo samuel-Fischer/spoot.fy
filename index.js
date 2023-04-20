@@ -3,7 +3,7 @@ const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
 // dotenv 
 const dotenv = require('dotenv');
 dotenv.config();
-const { TOKEN, CLIENT_ID, GUILD_ID } = process.env;
+const { TOKEN,CLIENT_ID,GUILD_ID } = process.env;
 
 // importação dos comandos
 const fs = require('node:fs');
@@ -49,6 +49,6 @@ client.on(Events.InteractionCreate, async interaction => {
     await command.execute(interaction)
   } catch (error) {
     console.error(error)
-    await interaction.reply("Houce um erro ao executar este comando!")
+    await interaction.reply("Houve um erro ao executar este comando!")
   };
 });
