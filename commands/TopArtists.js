@@ -21,7 +21,7 @@ module.exports = {
   data: userInfoCommand, // Informações do comando
   execute: async (interaction) => { // Função de execução
     const username = interaction.options.getString('username'); // Obtém o nome de usuário a partir das opções do comando
-    const TopArtistas = await usuario.getTopArtists(username,"7day"); // Faz uma requisição à API do Last.fm para obter as informações do usuário
+    const TopArtistas = await usuario.getTopArtists(username,"3month"); // Faz uma requisição à API do Last.fm para obter as informações do usuário
     const dados = JSON.parse(TopArtistas)
     console.log(dados,"DADDSFAD")
     await interaction.reply(`Resultado :${TopArtistas}`); // Envia uma mensagem de resposta com as informações do usuário
