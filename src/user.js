@@ -33,7 +33,12 @@ class User {
     
             }
         });
-        return response.data.user
+        let retorno = response.data.topartists.artist
+        console.log(retorno)        
+        console.log("typeof")
+        let objet = typeof retorno
+        console.log(objet.name)
+        return retorno
     }
 
 
