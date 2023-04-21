@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+const { EmbedBuilder } = require('discord.js');
 const{API_KEY_LASTFM,SECRET_LASTFM} = process.env
 const { SlashCommandBuilder } = require('discord.js');
 const {User} = require("../src/user");
@@ -22,27 +23,28 @@ module.exports = {
   execute: async (interaction) => { // Função de execução
     const username = interaction.options.getString('username'); // Obtém o nome de usuário a partir das opções do comando
     const TopArtistas = await usuario.getTopArtists(username,"3month"); // Faz uma requisição à API do Last.fm para obter as informações do usuário
-    const dados = TopArtistas
+    const embed = new EmbedBuilder()
+    .setTitle("Top artistas")
+    .setFields(TopArtistas)
+    .setThumbnail(interaction.user.avatarURL())
+    // const dados = TopArtistas.slice(0, 10);
     
-    console.log();
-    console.log("Lista de Clientes");
-    console.log("-".repeat(30));
+    // console.log();
+    // console.log("Lista de Clientes");
+    // console.log("-".repeat(30));
 
-    // for (const dado of dados) {
-    //   console.log(`${dado.nome} - ${dado.idade} anos`);
+    // let resultado = "";
+    
+    // for (const artist of dados) {
+    //   resultado += ` * ${artist.name} com ${artist.playcount} \n`;
     // }
-
-    let resultado = "";
-    
-    for (const artist of dados) {
-      resultado += ` * ${artist.name} com ${artist.playcount} \n`;
-    }
 
     // dados.forEach(dado => {
     // console.log(`${dado['name']} - ${dado['playcount']} plays`);
     // });
-    await interaction.reply(resultado); // Envia uma mensagem de resposta com as informações do usuário
+    await interaction.reply({embeds : [embed]}); // Envia uma mensagem de resposta com as informações do usuário
   },
+
 };
 
 

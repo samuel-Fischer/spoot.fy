@@ -33,14 +33,24 @@ class User {
     
             }
         });
-        let retorno = response.data.topartists.artist
-        console.log(retorno)        
-        console.log("typeof")
-        let objet = typeof retorno
-        console.log(objet.name)
+
+        
+        let artista = response.data.topartists.artist
+        let retorno = this.geradorEmbed(artista)
+        
         return retorno
     }
+    
+    geradorEmbed (TopArtistas){
+        let index =1
+        const dados = TopArtistas.slice(0, 10);
+        return dados.map(artist => {
+            const counter = index ;
+            index++;
+            return { name: " ", value: `${counter}.  [${artist.name}](${artist.url}) - ${artist.playcount} Plays` };
+          })
 
+    }
 
 }
 
