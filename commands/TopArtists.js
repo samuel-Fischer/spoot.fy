@@ -22,9 +22,26 @@ module.exports = {
   execute: async (interaction) => { // Função de execução
     const username = interaction.options.getString('username'); // Obtém o nome de usuário a partir das opções do comando
     const TopArtistas = await usuario.getTopArtists(username,"3month"); // Faz uma requisição à API do Last.fm para obter as informações do usuário
-    const dados = JSON.parse(TopArtistas)
-    console.log(dados,"DADDSFAD")
-    await interaction.reply(`Resultado :${TopArtistas}`); // Envia uma mensagem de resposta com as informações do usuário
+    const dados = TopArtistas
+    
+    console.log();
+    console.log("Lista de Clientes");
+    console.log("-".repeat(30));
+
+    // for (const dado of dados) {
+    //   console.log(`${dado.nome} - ${dado.idade} anos`);
+    // }
+
+    let resultado = "";
+    
+    for (const artist of dados) {
+      resultado += ` * ${artist.name} com ${artist.playcount} \n`;
+    }
+
+    // dados.forEach(dado => {
+    // console.log(`${dado['name']} - ${dado['playcount']} plays`);
+    // });
+    await interaction.reply(resultado); // Envia uma mensagem de resposta com as informações do usuário
   },
 };
 

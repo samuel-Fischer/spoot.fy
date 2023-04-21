@@ -1,9 +1,8 @@
 const Discord = require("discord.js");
-const LastFmNode = require('lastfmapi');
 const{API_KEY_LASTFM,SECRET_LASTFM} = process.env
 const { SlashCommandBuilder } = require('discord.js');
 const {User} = require("../src/user");
-const usuario = new User(API_KEY_LASTFM);
+const usuario = new User(API_KEY_LASTFM); 
 
 
 // Cria um novo SlashCommandBuilder para o comando "userinfo"
@@ -24,6 +23,7 @@ module.exports = {
     const username = interaction.options.getString('username'); // Obtém o nome de usuário a partir das opções do comando
     const userInfo = await usuario.getInfo(username); // Faz uma requisição à API do Last.fm para obter as informações do usuário
     await interaction.reply(`Usuário do Last.fm: ${userInfo.name}\nReproduções totais: ${userInfo.playcount}`); // Envia uma mensagem de resposta com as informações do usuário
+    
   },
 };
 
