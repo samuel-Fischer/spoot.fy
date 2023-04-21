@@ -1,13 +1,12 @@
-const Discord = require("discord.js");
-const { EmbedBuilder } = require('discord.js');
+const { MessageEmbed , EmbedBuilder , client} = require('discord.js');
 const{API_KEY_LASTFM,SECRET_LASTFM} = process.env
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder , ColorResolvable} = require('discord.js');
 const {User} = require("../src/user");
 const usuario = new User(API_KEY_LASTFM);
 
 
-// Cria um novo SlashCommandBuilder para o comando "userinfo"
-const userInfoCommand = new SlashCommandBuilder()
+// Cria um novo SlashCommandBuilder para o comando "topartistas"
+const topArtistasCommand = new SlashCommandBuilder()
     .setName('topartistas') // Define o nome do comando
     .setDescription('Exibe o Top Artista do Usuario') // Define a descrição do comando
     .addStringOption(option => // Adiciona uma opção para o nome de usuário
@@ -19,29 +18,17 @@ const userInfoCommand = new SlashCommandBuilder()
 
 // Exporta um objeto contendo as informações do comando e a função de execução
 module.exports = {
-  data: userInfoCommand, // Informações do comando
+  data: topArtistasCommand, // Informações do comando
   execute: async (interaction) => { // Função de execução
     const username = interaction.options.getString('username'); // Obtém o nome de usuário a partir das opções do comando
-    const TopArtistas = await usuario.getTopArtists(username,"3month"); // Faz uma requisição à API do Last.fm para obter as informações do usuário
+    const TopArtistas = await usuario.getTopArtists(username,"1month"); // Faz uma requisição à API do Last.fm para obter as informações do usuário
+    console.log('Top artistas:', TopArtistas);
     const embed = new EmbedBuilder()
     .setTitle("Top artistas")
     .setFields(TopArtistas)
     .setThumbnail(interaction.user.avatarURL())
-    // const dados = TopArtistas.slice(0, 10);
+    .setColor(`#6BCA42`);
     
-    // console.log();
-    // console.log("Lista de Clientes");
-    // console.log("-".repeat(30));
-
-    // let resultado = "";
-    
-    // for (const artist of dados) {
-    //   resultado += ` * ${artist.name} com ${artist.playcount} \n`;
-    // }
-
-    // dados.forEach(dado => {
-    // console.log(`${dado['name']} - ${dado['playcount']} plays`);
-    // });
     await interaction.reply({embeds : [embed]}); // Envia uma mensagem de resposta com as informações do usuário
   },
 

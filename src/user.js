@@ -42,14 +42,14 @@ class User {
     }
     
     geradorEmbed (TopArtistas){
-        let index =1
+        let index = 1;
         const dados = TopArtistas.slice(0, 10);
-        return dados.map(artist => {
+        const artistas = dados.map(artist => {
             const counter = index ;
             index++;
-            return { name: " ", value: `${counter}.  [${artist.name}](${artist.url}) - ${artist.playcount} Plays` };
-          })
-
+            return `${counter}.  **[${artist.name}](${artist.url})** - ${artist.playcount} Plays`;
+        }).join('\n');
+        return [{ name: ' ', value: artistas }];
     }
 
 }
