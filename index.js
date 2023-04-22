@@ -1,4 +1,5 @@
 const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
+const {connect} = require("./src/MongoDB/Connection")
 
 // dotenv 
 const dotenv = require('dotenv');
@@ -25,8 +26,9 @@ for (const file of commandFiles) {
 };
 
 
-client.once(Events.ClientReady, c => {
+client.once(Events.ClientReady,async c => {
 	console.log(`Pronto! Login realizado como ${c.user.tag}`);
+  const db = await connect(); // Obtém uma referência para o objeto db
   client.user.setPresence({ // nao consigo por tipo de status
     status: 'online',
     activities: [{

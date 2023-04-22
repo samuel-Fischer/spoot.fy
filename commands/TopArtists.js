@@ -1,7 +1,7 @@
 const { MessageEmbed , EmbedBuilder , client} = require('discord.js');
 const{API_KEY_LASTFM,SECRET_LASTFM} = process.env
 const { SlashCommandBuilder , ColorResolvable} = require('discord.js');
-const {User} = require("../src/user");
+const {User} = require("../src/LastFM/user");
 const usuario = new User(API_KEY_LASTFM);
 
 
