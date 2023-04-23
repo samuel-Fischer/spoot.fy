@@ -7,12 +7,12 @@ const {connect} = require("../src/MongoDB/Connection")
 
 
 // Cria um novo SlashCommandBuilder para o comando "topartistas"
-const topArtistasCommand = new SlashCommandBuilder()
-    .setName('topartistas')
-    .setDescription('Exibe o Top Artista do Usuario')
+const topMusicasCommand = new SlashCommandBuilder()
+    .setName('top_musicas')
+    .setDescription('Exibe o Top Musicas do Usuario')
     .addStringOption(option =>
         option.setName('periodo')
-            .setDescription('Selecione o período para o qual deseja visualizar o Top Artistas')
+            .setDescription('Selecione o período para o qual deseja visualizar o Top Musicas')
             .addChoices(
               { name: 'Últimos 7 dias', value: '7day' },
               { name: 'Último mês', value: '1month' },
@@ -27,7 +27,7 @@ const topArtistasCommand = new SlashCommandBuilder()
 
 // Exporta um objeto contendo as informações do comando e a função de execução
 module.exports = {
-  data: topArtistasCommand, // Informações do comando
+  data: topMusicasCommand, // Informações do comando
   execute: async (interaction) => { // Função de execução
     const db = await connect(); // Obtém uma referência para o objeto db
     const filter = { ID_USER_DISCORD: interaction.user.id };
@@ -38,12 +38,12 @@ module.exports = {
     } else {
         console.log(`A consulta retornou ${results.length} resultados`);
         const periodo = interaction.options.getString('periodo'); // Obtém o valor selecionado pelo usuário
-        const TopArtistas = await usuario.getTopArtists(results[0].USER_LASTFM,periodo); // Faz uma requisição à API do Last.fm para obter as informações do usuário
+        const TopResultado = await usuario.getTopTracks(results[0].USER_LASTFM,periodo); // Faz uma requisição à API do Last.fm para obter as informações do usuário
 
-        console.log('Top artistas:', TopArtistas);
+        console.log('Top musicas:', TopResultado);
         const embed = new EmbedBuilder()
-        .setTitle("Top artistas")
-        .setFields(TopArtistas)
+        .setTitle("Top Musicas")
+        .setFields(TopResultado)
         .setThumbnail(interaction.user.avatarURL())
         .setColor(`#6BCA42`);
         

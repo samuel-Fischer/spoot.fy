@@ -40,19 +40,38 @@ class User {
         
         return retorno
     }
+
+    async getTopTracks (user,period){
+        let response = await axios.get(this.baseUrl, {
+            params: {
+            method:"user.gettoptracks",
+            user,
+            period,
+            api_key: this.api_key,
+            format: "json"
     
-    geradorEmbed (TopArtistas){
+            }
+        });
+
+        
+        let Musica = response.data.toptracks.track
+        let retorno = this.geradorEmbed(Musica)
+        
+        return retorno
+    }
+    
+    geradorEmbed(TopDados){
         let index = 1;
-        const dados = TopArtistas.slice(0, 10);
-        const artistas = dados.map(artist => {
+        const dados = TopDados.slice(0, 10);
+        const saida = dados.map(dado => {
             const counter = index ;
             index++;
-            return `${counter}.  **[${artist.name}](${artist.url})** - ${artist.playcount} Plays`;
+            return `${counter}.  **[${dado.name}](${dado.url})** - ${dado.playcount} Plays`;
         }).join('\n');
-        return [{ name: ' ', value: artistas }];
+        return [{ name: ` `, value: saida }];
     }
-
 }
+
 
 module.exports = {
     User
