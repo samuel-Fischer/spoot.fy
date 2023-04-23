@@ -60,16 +60,53 @@ class User {
         return retorno
     }
     
-    geradorEmbed(TopDados){
+    async geradorEmbed(TopDados){
         let index = 1;
         const dados = TopDados.slice(0, 10);
-        const saida = dados.map(dado => {
-            const counter = index ;
+        const limite = 1024;
+        let embed1 = '';
+        let embed2 = '';
+      
+        const embeds = [];
+      
+        dados.forEach(dado => {
+            const counter = index;
             index++;
-            return `${counter}.  **[${dado.name}](${dado.url})** - ${dado.playcount} Plays`;
-        }).join('\n');
-        return [{ name: ` `, value: saida }];
+            const linha = `${counter}.  **[${dado.name}](${dado.url})** - ${dado.playcount} Plays\n`;
+            if ((embed1 + linha).length <= limite) {
+                embed1 += linha;
+            } else {
+                embed2 += linha;
+            }
+        });
+      
+        if (embed1) {
+            embeds.push({ name: ` `, value: embed1 });
+        }
+      
+        if (embed2) {
+            embeds.push({ name: ` `, value: embed2 });
+        }
+      
+        return embeds;
     }
+    
+
+
+    // geradorEmbed(TopDados){
+    //     let index = 1;
+    //     const dados = TopDados.slice(0, 10);
+    //     const saida = dados.map(dado => {
+    //         const counter = index ;
+    //         index++;
+    //         if(saida.length>=900){
+
+    //         }
+    //         return `${counter}.  **[${dado.name}](${dado.url})** - ${dado.playcount} Plays`;
+    //     }).join('\n');
+    //     return [{ name: ` `, value: saida }];
+    // }
+      
 }
 
 

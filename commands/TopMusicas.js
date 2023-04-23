@@ -6,6 +6,7 @@ const usuario = new User(API_KEY_LASTFM);
 const {connect} = require("../src/MongoDB/Connection")
 
 
+
 // Cria um novo SlashCommandBuilder para o comando "topartistas"
 const topMusicasCommand = new SlashCommandBuilder()
     .setName('top_musicas')
@@ -29,12 +30,25 @@ const topMusicasCommand = new SlashCommandBuilder()
 module.exports = {
   data: topMusicasCommand, // Informações do comando
   execute: async (interaction) => { // Função de execução
+    const userId = interaction.user.id;
+    const { user } = interaction.member;
     const db = await connect(); // Obtém uma referência para o objeto db
-    const filter = { ID_USER_DISCORD: interaction.user.id };
+    const filter = { ID_USER_DISCORD: userId };
     const results = await db.collection('USUARIO').find(filter).toArray();
     if (results.length === 0) {
       console.log('A consulta não retornou resultados');   
       await interaction.reply(`Não foi cadastrado nenhum usuario \n Tente usar o comando Gravar_Usuario_LastFM `); // Envia uma mensagem de resposta com as informações do usuário
+
+        db.collection('LOG_DE_CHAMADOS').insertOne({
+            ID_USER_DISCORD: userId,
+            USER_DISCORD: user.tag,
+            USER_LASTFM: ``,
+            NOME_DO_CHAMADO: "top_musicas",
+            PERIODO_REQUISITADO: periodo,
+            DTA_HORA: Date(),
+            ERROR:'Usuario não cadastrado no Banco'
+        });
+
     } else {
         console.log(`A consulta retornou ${results.length} resultados`);
         const periodo = interaction.options.getString('periodo'); // Obtém o valor selecionado pelo usuário
@@ -42,16 +56,30 @@ module.exports = {
 
         console.log('Top musicas:', TopResultado);
         const embed = new EmbedBuilder()
-        .setTitle("Top Musicas")
+        .setTitle(`Top Musicas\nPeriodo selecionado:  ${periodo}`)
         .setFields(TopResultado)
         .setThumbnail(interaction.user.avatarURL())
         .setColor(`#6BCA42`);
         
         await interaction.reply({embeds : [embed]}); // Envia uma mensagem de resposta com as informações do usuário
+
+            db.collection('LOG_DE_CHAMADOS').insertOne({
+                ID_USER_DISCORD: userId,
+                USER_DISCORD: user.tag,
+                USER_LASTFM: results[0].USER_LASTFM,
+                NOME_DO_CHAMADO: "top_musicas",
+                PERIODO_REQUISITADO: periodo,
+                DTA_HORA: Date(),
+                ERROR:'',
+                EMBED: embed
+            });
+    
+        } 
+
     }
     
-  },
+}
 
-};
+
 
 
