@@ -7,14 +7,13 @@ const {connect} = require("../src/MongoDB/Connection")
 
 
 
-
 // Cria um novo SlashCommandBuilder para o comando "topartistas"
-const topArtistasCommand = new SlashCommandBuilder()
-    .setName('topartistas')
-    .setDescription('Exibe o Top Artista do Usuario')
+const topMusicasCommand = new SlashCommandBuilder()
+    .setName('top_musicas')
+    .setDescription('Exibe o Top Musicas do Usuario')
     .addStringOption(option =>
         option.setName('periodo')
-            .setDescription('Selecione o período para o qual deseja visualizar o Top Artistas')
+            .setDescription('Selecione o período para o qual deseja visualizar o Top Musicas')
             .addChoices(
               { name: 'Últimos 7 dias', value: '7day' },
               { name: 'Último mês', value: '1month' },
@@ -29,7 +28,7 @@ const topArtistasCommand = new SlashCommandBuilder()
 
 // Exporta um objeto contendo as informações do comando e a função de execução
 module.exports = {
-  data: topArtistasCommand, // Informações do comando
+  data: topMusicasCommand, // Informações do comando
   execute: async (interaction) => { // Função de execução
     const userId = interaction.user.id;
     const { user } = interaction.member;
@@ -39,46 +38,48 @@ module.exports = {
     if (results.length === 0) {
       console.log('A consulta não retornou resultados');   
       await interaction.reply(`Não foi cadastrado nenhum usuario \n Tente usar o comando Gravar_Usuario_LastFM `); // Envia uma mensagem de resposta com as informações do usuário
-      db.collection('LOG_DE_CHAMADOS').insertOne({
-        ID_USER_DISCORD: userId,
-        USER_DISCORD: user.tag,
-        USER_LASTFM: ``,
-        NOME_DO_CHAMADO: "top_musicas",
-        PERIODO_REQUISITADO: periodo,
-        DTA_HORA: Date(),
-        ERROR:'Usuario não cadastrado no Banco'
-    });
+
+        db.collection('LOG_DE_CHAMADOS').insertOne({
+            ID_USER_DISCORD: userId,
+            USER_DISCORD: user.tag,
+            USER_LASTFM: ``,
+            NOME_DO_CHAMADO: "top_musicas",
+            PERIODO_REQUISITADO: periodo,
+            DTA_HORA: Date(),
+            ERROR:'Usuario não cadastrado no Banco'
+        });
 
     } else {
         console.log(`A consulta retornou ${results.length} resultados`);
         const periodo = interaction.options.getString('periodo'); // Obtém o valor selecionado pelo usuário
-        const TopArtistas = await usuario.getTopArtists(results[0].USER_LASTFM,periodo); // Faz uma requisição à API do Last.fm para obter as informações do usuário
+        const TopResultado = await usuario.getTopTracks(results[0].USER_LASTFM,periodo); // Faz uma requisição à API do Last.fm para obter as informações do usuário
 
-        console.log('Top artistas:', TopArtistas);
+        console.log('Top musicas:', TopResultado);
         const embed = new EmbedBuilder()
-        .setTitle("Top artistas")
-        .setFields(TopArtistas)
+        .setTitle(`Top Musicas\nPeriodo selecionado:  ${periodo}`)
+        .setFields(TopResultado)
         .setThumbnail(interaction.user.avatarURL())
         .setColor(`#6BCA42`);
         
         await interaction.reply({embeds : [embed]}); // Envia uma mensagem de resposta com as informações do usuário
 
-
-        db.collection('LOG_DE_CHAMADOS').insertOne({
-          ID_USER_DISCORD: userId,
-          USER_DISCORD: user.tag,
-          USER_LASTFM: results[0].USER_LASTFM,
-          NOME_DO_CHAMADO: "top_musicas",
-          PERIODO_REQUISITADO: periodo,
-          DTA_HORA: Date(),
-          ERROR:'',
-          EMBED: embed
-      });
+            db.collection('LOG_DE_CHAMADOS').insertOne({
+                ID_USER_DISCORD: userId,
+                USER_DISCORD: user.tag,
+                USER_LASTFM: results[0].USER_LASTFM,
+                NOME_DO_CHAMADO: "top_musicas",
+                PERIODO_REQUISITADO: periodo,
+                DTA_HORA: Date(),
+                ERROR:'',
+                EMBED: embed
+            });
+    
+        } 
 
     }
     
-  },
+}
 
-};
+
 
 
