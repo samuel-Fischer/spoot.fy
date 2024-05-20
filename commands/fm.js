@@ -1,9 +1,9 @@
 const Discord = require("discord.js");
 const{API_KEY_LASTFM,SECRET_LASTFM} = process.env
 const { SlashCommandBuilder } = require('discord.js');
-const {User} = require("../src/user");
-const usuario = new User(API_KEY_LASTFM); 
+const {User} = require("../src/LastFM/user");
 
+const usuario = new User(API_KEY_LASTFM); 
 
 // Cria um novo SlashCommandBuilder para o comando "userinfo"
 const userInfoCommand = new SlashCommandBuilder()
